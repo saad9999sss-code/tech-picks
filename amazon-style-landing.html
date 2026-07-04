@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot" data-lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amazon Picks — مختارات أمازون</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark: #131921;
+    --dark-2: #232F3E;
+    --orange: #FF9900;
+    --orange-hover: #E88A00;
+    --bg: #EAEDED;
+    --card-bg: #FFFFFF;
+    --price-red: #B12704;
+    --star: #FFA41C;
+    --text: #0F1111;
+    --muted: #565959;
+    --link-blue: #007185;
+    --border: #D5D9D9;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+  }
+  html[dir="rtl"] body{ font-family:'Tajawal',sans-serif; }
+  html[data-lang="en"] .en-only{display:inline-block;}
+  html[data-lang="en"] div.en-only, html[data-lang="en"] section.en-only, html[data-lang="en"] p.en-only, html[data-lang="en"] h1.en-only, html[data-lang="en"] h2.en-only, html[data-lang="en"] h3.en-only, html[data-lang="en"] span.badge-en{display:inline-flex;}
+  html[data-lang="ar"] .ar-only{display:inline-block;}
+  html[data-lang="ar"] div.ar-only, html[data-lang="ar"] section.ar-only, html[data-lang="ar"] p.ar-only, html[data-lang="ar"] h1.ar-only, html[data-lang="ar"] h2.ar-only, html[data-lang="ar"] h3.ar-only{display:block;}
+  .en-only, .ar-only{display:none;}
+
+  /* Top bar - dark, Amazon-like */
+  .topbar{
+    background:var(--dark);
+    color:#fff;
+    padding:14px 16px 40px;
+  }
+  .topbar-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    max-width:640px;
+    margin:0 auto 16px;
+  }
+  .wordmark{
+    font-family:'Inter',sans-serif;
+    font-weight:800;
+    font-size:22px;
+    color:#fff;
+    letter-spacing:-0.02em;
+  }
+  .wordmark span{ color:var(--orange); }
+  html[dir="rtl"] .wordmark-ar{
+    font-family:'Tajawal',sans-serif;
+    font-weight:800;
+    font-size:19px;
+  }
+  .lang-btn{
+    font-size:12px;
+    background:transparent;
+    color:#fff;
+    border:1px solid rgba(255,255,255,0.4);
+    padding:7px 12px;
+    border-radius:3px;
+    cursor:pointer;
+  }
+  .search-bar{
+    max-width:640px;
+    margin:0 auto;
+    display:flex;
+    border-radius:6px;
+    overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,0.3);
+  }
+  .search-bar input{
+    flex:1;
+    border:none;
+    padding:12px 14px;
+    font-size:14px;
+    font-family:inherit;
+    outline:none;
+  }
+  .search-bar input::placeholder{ color:#8a8a8a; }
+  .search-bar button{
+    background:var(--orange);
+    border:none;
+    padding:0 18px;
+    font-size:16px;
+    cursor:pointer;
+  }
+
+  /* Hero strip */
+  .hero-strip{
+    max-width:640px;
+    margin:-24px auto 0;
+    padding:0 16px;
+  }
+  .hero-card{
+    background:linear-gradient(120deg, #232F3E 0%, #37475A 100%);
+    color:#fff;
+    border-radius:8px;
+    padding:22px 20px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.15);
+  }
+  .hero-card .eyebrow{
+    font-size:11.5px;
+    color:var(--orange);
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  html[dir="rtl"] .hero-card .eyebrow{ letter-spacing:0; text-transform:none; font-size:13px; }
+  .hero-card h1{
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .hero-card p{
+    font-size:13.5px;
+    color:rgba(255,255,255,0.75);
+  }
+
+  /* Category chips */
+  .chips{
+    max-width:640px;
+    margin:18px auto 0;
+    padding:0 16px;
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+  }
+  .chip{
+    background:#fff;
+    border:1px solid var(--border);
+    color:var(--text);
+    font-size:12.5px;
+    padding:7px 14px;
+    border-radius:16px;
+    white-space:nowrap;
+  }
+  .chip.active{
+    background:var(--dark);
+    color:#fff;
+    border-color:var(--dark);
+  }
+
+  /* Section head */
+  .section-head{
+    max-width:640px;
+    margin:26px auto 12px;
+    padding:0 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .section-head h2{
+    font-size:17px;
+    font-weight:700;
+  }
+  .section-head .see-all{
+    font-size:12.5px;
+    color:var(--link-blue);
+  }
+
+  /* Product grid */
+  .products{
+    max-width:640px;
+    margin:0 auto;
+    padding:0 16px 36px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .card{
+    background:var(--card-bg);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:14px;
+    display:flex;
+    gap:14px;
+  }
+  .thumb{
+    width:88px; height:88px;
+    flex-shrink:0;
+    background:#F5F6F6;
+    border:1px solid var(--border);
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+  }
+  .card-info{ flex:1; min-width:0; }
+  .badge-row{ display:flex; gap:6px; margin-bottom:5px; flex-wrap:wrap;}
+  .badge{
+    font-size:10.5px;
+    font-weight:700;
+    padding:2px 7px;
+    border-radius:3px;
+    display:inline-flex;
+    align-items:center;
+  }
+  .badge.bestseller{ background:#232F3E; color:#fff; }
+  .badge.deal{ background:#CC0C39; color:#fff; }
+  .card h3{
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--text);
+    margin-bottom:4px;
+    line-height:1.3;
+  }
+  .stars{
+    color:var(--star);
+    font-size:13px;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    margin-bottom:6px;
+  }
+  .stars .rcount{ color:var(--link-blue); font-size:11.5px; }
+  .price-row{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .price{
+    font-size:18px;
+    font-weight:700;
+    color:var(--price-red);
+  }
+  .price-old{
+    font-size:12.5px;
+    color:var(--muted);
+    text-decoration:line-through;
+  }
+  .btn-buy{
+    display:inline-block;
+    background:var(--orange);
+    color:#111;
+    font-size:13px;
+    font-weight:700;
+    padding:9px 16px;
+    border-radius:20px;
+    text-decoration:none;
+    width:100%;
+    text-align:center;
+  }
+  .btn-buy:active{ background:var(--orange-hover); }
+
+  footer{
+    max-width:640px;
+    margin:0 auto;
+    padding:20px 16px 50px;
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+  }
+  footer .edit-note{
+    font-family:monospace;
+    font-size:11px;
+    text-align:start;
+    background:#fff;
+    border:1px dashed var(--border);
+    padding:12px;
+    border-radius:6px;
+    margin-top:16px;
+    color:var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-row">
+    <div class="wordmark ar-only wordmark-ar">مختارات <span>أمازون</span></div>
+    <div class="wordmark en-only">amazon<span>picks</span></div>
+    <button class="lang-btn" onclick="setLang('en')" id="btnToEn">English</button>
+    <button class="lang-btn" onclick="setLang('ar')" id="btnToAr" style="display:none;">العربية</button>
+  </div>
+  <div class="search-bar">
+    <input type="text" class="ar-only" placeholder="ابحث عن منتج...">
+    <input type="text" class="en-only" placeholder="Search products...">
+    <button>🔍</button>
+  </div>
+</div>
+
+<div class="hero-strip">
+  <div class="hero-card">
+    <div class="eyebrow ar-only">مختارات اليوم</div>
+    <div class="eyebrow en-only">Today's picks</div>
+    <h1 class="ar-only">أفضل صفقات التقنية هالأسبوع</h1>
+    <h1 class="en-only">This week's best tech deals</h1>
+    <p class="ar-only">منتجات مختارة بعناية من أمازون — جودة عالية وأسعار منافسة.</p>
+    <p class="en-only">Handpicked from Amazon — solid quality, competitive prices.</p>
+  </div>
+</div>
+
+<div class="chips">
+  <span class="chip active ar-only">الكل</span>
+  <span class="chip active en-only">All</span>
+  <span class="chip ar-only">سماعات</span>
+  <span class="chip en-only">Audio</span>
+  <span class="chip ar-only">شحن</span>
+  <span class="chip en-only">Charging</span>
+  <span class="chip ar-only">إكسسوارات</span>
+  <span class="chip en-only">Accessories</span>
+</div>
+
+<div class="section-head">
+  <h2 class="ar-only">الأكثر رواجاً</h2>
+  <h2 class="en-only">Trending now</h2>
+  <span class="see-all ar-only">عرض الكل ›</span>
+  <span class="see-all en-only">See all ›</span>
+</div>
+
+<section class="products" id="productList"></section>
+
+<footer>
+  <p class="ar-only">هذي الصفحة غير تابعة لأمازون بشكل رسمي، وتحتوي روابط أفلييت — لما تشتري من خلالها، نحصل على عمولة بدون أي تكلفة إضافية عليك.</p>
+  <p class="en-only">This page is not officially affiliated with Amazon and contains affiliate links — purchases through them may earn a small commission at no extra cost to you.</p>
+  <div class="edit-note ar-only">عدّل بيانات المنتجات (الاسم، السعر، الرابط، الإيموجي) داخل مصفوفة PRODUCTS بالكود، أو ابعتلي المنتجات الحقيقية وروابط الأفلييت وأحدّثها لك.</div>
+  <div class="edit-note en-only">Edit product data (name, price, link, emoji) inside the PRODUCTS array in the code, or send me the real products and affiliate links and I'll update it.</div>
+</footer>
+
+<script>
+  // ---- EDIT YOUR PRODUCTS HERE ----
+  const PRODUCTS = [
+    {
+      emoji: "🎧",
+      nameAr: "أبل إيربودز 4 لاسلكية",
+      nameEn: "Apple AirPods 4 Wireless Earbuds",
+      rating: "★★★★★", reviews: "12,480",
+      price: "$129", oldPrice: "$149",
+      badge: "bestseller",
+      link: "https://www.amazon.com/s?k=Apple+AirPods+4+Wireless+Earbuds&tag=saadinspire20-20"
+    },
+    {
+      emoji: "🔋",
+      nameAr: "باور بانك INIU سريع الشحن 45 واط",
+      nameEn: "INIU 45W Fast-Charging 10,000mAh Power Bank",
+      rating: "★★★★★", reviews: "8,760",
+      price: "$37", oldPrice: "$45",
+      badge: "deal",
+      link: "https://www.amazon.com/s?k=INIU+45W+Fast+Charging+Power+Bank+10000mAh&tag=saadinspire20-20"
+    },
+    {
+      emoji: "⌨️",
+      nameAr: "كيبورد ميكانيكي صغير الحجم Keychron K3",
+      nameEn: "Keychron K3 Compact Mechanical Keyboard",
+      rating: "★★★★☆", reviews: "3,215",
+      price: "$74", oldPrice: "",
+      badge: "",
+      link: "https://www.amazon.com/s?k=Keychron+K3+Compact+Mechanical+Keyboard&tag=saadinspire20-20"
+    },
+    {
+      emoji: "⌚",
+      nameAr: "ساعة Samsung Galaxy Fit3 الذكية",
+      nameEn: "Samsung Galaxy Fit3 Health Tracking Smartwatch",
+      rating: "★★★★☆", reviews: "5,540",
+      price: "$49", oldPrice: "$59",
+      badge: "bestseller",
+      link: "https://www.amazon.com/s?k=Samsung+Galaxy+Fit3+Smartwatch&tag=saadinspire20-20"
+    }
+  ];
+
+  function renderProducts(){
+    const wrap = document.getElementById('productList');
+    wrap.innerHTML = PRODUCTS.map(p => `
+      <div class="card">
+        <div class="thumb">${p.emoji}</div>
+        <div class="card-info">
+          <div class="badge-row">
+            ${p.badge === 'bestseller' ? `<span class="badge bestseller ar-only">الأكثر مبيعاً</span><span class="badge bestseller en-only">Best Seller</span>` : ''}
+            ${p.badge === 'deal' ? `<span class="badge deal ar-only">عرض خاص</span><span class="badge deal en-only">Deal</span>` : ''}
+          </div>
+          <h3 class="ar-only">${p.nameAr}</h3>
+          <h3 class="en-only">${p.nameEn}</h3>
+          <div class="stars">${p.rating} <span class="rcount">(${p.reviews})</span></div>
+          <div class="price-row">
+            <span class="price">${p.price}</span>
+            ${p.oldPrice ? `<span class="price-old">${p.oldPrice}</span>` : ''}
+          </div>
+          <a class="btn-buy" href="${p.link}" target="_blank" rel="noopener nofollow">
+            <span class="ar-only">شاهد على أمازون</span>
+            <span class="en-only">View on Amazon</span>
+          </a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function setLang(lang){
+    const html = document.getElementById('htmlRoot');
+    html.setAttribute('data-lang', lang);
+    html.setAttribute('lang', lang);
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    document.getElementById('btnToEn').style.display = lang === 'ar' ? 'inline-block' : 'none';
+    document.getElementById('btnToAr').style.display = lang === 'en' ? 'inline-block' : 'none';
+  }
+
+  renderProducts();
+  setLang('ar');
+</script>
+
+</body>
+</html>
